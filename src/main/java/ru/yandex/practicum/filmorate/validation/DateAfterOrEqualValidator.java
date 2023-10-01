@@ -22,7 +22,7 @@ public class DateAfterOrEqualValidator implements ConstraintValidator<DateAfterO
         }
 
         try {
-            LocalDate minDate = LocalDate.parse(constraintAnnotation.minDate());
+            LocalDate minDate = LocalDate.parse(constraintAnnotation.minDate(), formatter);
             return !dateField.isBefore(minDate);
         } catch (DateTimeParseException ex) {
             return false;

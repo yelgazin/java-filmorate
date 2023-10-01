@@ -50,7 +50,7 @@ class FilmTest extends ValidatorTest {
     @Test
     void setInvalidReleaseDate_InvalidMessage() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate releaseDate = LocalDate.parse("1895-12-27");
+        LocalDate releaseDate = LocalDate.parse("1895-12-27", formatter);
         film.setReleaseDate(releaseDate);
         assertEquals("Дата релиза не может быть раньше 28 декабря 1895 года",
                 validateAndGetFirstMessageTemplate(film));

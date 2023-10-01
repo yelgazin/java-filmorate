@@ -13,7 +13,7 @@ import java.util.*;
 @RequestMapping("/films")
 public class FilmController {
 
-    private final Map<Integer, Film> filmStorage= new HashMap<>();
+    private final Map<Integer, Film> filmStorage = new HashMap<>();
     private int numerator = 0;
 
     @PostMapping

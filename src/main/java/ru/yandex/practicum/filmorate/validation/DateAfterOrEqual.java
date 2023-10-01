@@ -10,5 +10,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DateAfterOrEqual {
     String message() default "Неверная дата";
+    Class<?>[] groups() default {};
+    Class<? extends Payload>[] payload() default {};
     String minDate();
 }

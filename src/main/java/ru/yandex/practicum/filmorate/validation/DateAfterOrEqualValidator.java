@@ -10,6 +10,7 @@ public class DateAfterOrEqualValidator implements ConstraintValidator<DateAfterO
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private DateAfterOrEqual constraintAnnotation;
+
     @Override
     public void initialize(DateAfterOrEqual constraintAnnotation) {
         this.constraintAnnotation = constraintAnnotation;

@@ -147,7 +147,7 @@ class FilmControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        Film updatedFilm= fromResult(result, Film.class);
+        Film updatedFilm = fromResult(result, Film.class);
         assertEquals(createdFilm, updatedFilm);
     }
 

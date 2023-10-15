@@ -8,6 +8,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.yandex.practicum.filmorate.exception.RestException;
 import ru.yandex.practicum.filmorate.exception.RestExceptionHandler;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,7 +24,7 @@ class UserControllerTest extends AbstractControllerTest {
     @BeforeEach
     public void setup() {
         mockMvc = MockMvcBuilders
-                .standaloneSetup(new UserController())
+                .standaloneSetup(new UserController(new UserService(new InMemoryUserStorage())))
                 .setControllerAdvice(new RestExceptionHandler())
                 .build();
 
@@ -121,7 +123,7 @@ class UserControllerTest extends AbstractControllerTest {
                 .andReturn();
 
         User createdUser = fromResult(result, User.class);
-        user.setId(1);
+        user.setId(1L);
         assertEquals(user, createdUser);
     }
 
@@ -155,7 +157,7 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     public void updateUserWithInvalidId_ResponseNotFound() throws Exception {
-        user.setId(1000);
+        user.setId(1000L);
         MvcResult result = mockMvc.perform(getPutRequestBuilder("/users", user))
                 .andExpect(status().isNotFound())
                 .andReturn();

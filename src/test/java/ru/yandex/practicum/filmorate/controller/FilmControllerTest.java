@@ -8,6 +8,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.yandex.practicum.filmorate.exception.RestException;
 import ru.yandex.practicum.filmorate.exception.RestExceptionHandler;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -25,7 +29,11 @@ class FilmControllerTest extends AbstractControllerTest {
     @BeforeEach
     public void setup() {
         mockMvc = MockMvcBuilders
-                .standaloneSetup(new FilmController())
+                .standaloneSetup(new FilmController(
+                                new FilmService(new InMemoryFilmStorage(),
+                                        new UserService(new InMemoryUserStorage()))
+                        )
+                )
                 .setControllerAdvice(new RestExceptionHandler())
                 .build();
 
@@ -117,13 +125,13 @@ class FilmControllerTest extends AbstractControllerTest {
                 .andReturn();
 
         Film createdFilm = fromResult(result, Film.class);
-        film.setId(1);
+        film.setId(1L);
         assertEquals(film, createdFilm);
     }
 
     @Test
     public void updateFilmWithInvalidId_ResponseNotFound() throws Exception {
-        film.setId(1000);
+        film.setId(1000L);
         MvcResult result = mockMvc.perform(getPutRequestBuilder("/films", film))
                 .andExpect(status().isNotFound())
                 .andReturn();
@@ -166,7 +174,8 @@ class FilmControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<Film> films = fromResult(result,  new TypeReference<List<Film>>() {});
+        List<Film> films = fromResult(result, new TypeReference<List<Film>>() {
+        });
         assertEquals(2, films.size());
     }
 }

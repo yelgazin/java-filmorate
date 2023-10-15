@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class BaseInMemoryStorage<E extends BaseEntity<ID>, ID> implements Storage<E, ID> {
+public abstract class BaseInMemoryStorage<E extends BaseEntity<K>, K> implements Storage<E, K> {
 
-    private final Map<ID, E> entities = new HashMap<>();
+    private final Map<K, E> entities = new HashMap<>();
 
     public void add(E entity) {
         validate(entity);
@@ -31,7 +31,7 @@ public abstract class BaseInMemoryStorage<E extends BaseEntity<ID>, ID> implemen
     }
 
     @Override
-    public void removeById(ID id) {
+    public void removeById(K id) {
         entities.remove(id);
     }
 
@@ -40,7 +40,7 @@ public abstract class BaseInMemoryStorage<E extends BaseEntity<ID>, ID> implemen
         return entities.containsKey(entity.getId());
     }
 
-    public E findById(ID id) {
+    public E findById(K id) {
         return entities.get(id);
     }
 

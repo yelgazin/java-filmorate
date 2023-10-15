@@ -15,11 +15,14 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class UserControllerTest extends AbstractControllerTest {
 
-    private User user;
+    private User user1;
+    private User user2;
+    private User user3;
 
     @BeforeEach
     public void setup() {
@@ -28,18 +31,29 @@ class UserControllerTest extends AbstractControllerTest {
                 .setControllerAdvice(new RestExceptionHandler())
                 .build();
 
-        user = new User();
-        user.setEmail("valid@mail.ru");
-        user.setLogin("loginName");
-        user.setName("Some name");
-        user.setBirthday(LocalDate.now().minusYears(40));
+        user1 = new User();
+        user1.setEmail("user1@mail.ru");
+        user1.setLogin("loginName1");
+        user1.setName("Some name1");
+        user1.setBirthday(LocalDate.now().minusYears(40));
 
+        user2 = new User();
+        user2.setEmail("user2@mail.ru");
+        user2.setLogin("loginName2");
+        user2.setName("Some name2");
+        user2.setBirthday(LocalDate.now().minusYears(40));
+
+        user3 = new User();
+        user3.setEmail("user3@mail.ru");
+        user3.setLogin("loginName3");
+        user3.setName("Some name3");
+        user3.setBirthday(LocalDate.now().minusYears(40));
     }
 
     @Test
     public void createUserWithNullEmail_ResponseBadRequest() throws Exception {
-        user.setEmail(null);
-        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user))
+        user1.setEmail(null);
+        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user1))
                 .andExpect(status().isBadRequest())
                 .andReturn();
         RestException ex = fromResult(result, RestException.class);
@@ -48,8 +62,8 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     public void createUserWithEmptyEmail_ResponseBadRequest() throws Exception {
-        user.setEmail("");
-        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user))
+        user1.setEmail("");
+        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user1))
                 .andExpect(status().isBadRequest())
                 .andReturn();
         RestException ex = fromResult(result, RestException.class);
@@ -58,8 +72,8 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     public void createUserWithEmailWithoutAtSymbol_ResponseBadRequest() throws Exception {
-        user.setEmail("somemail.com");
-        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user))
+        user1.setEmail("somemail.com");
+        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user1))
                 .andExpect(status().isBadRequest())
                 .andReturn();
         RestException ex = fromResult(result, RestException.class);
@@ -68,8 +82,8 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     public void createUserWithInvalidAtPositionInTheEmail_ResponseBadRequest() throws Exception {
-        user.setEmail("@someemail.com");
-        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user))
+        user1.setEmail("@someemail.com");
+        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user1))
                 .andExpect(status().isBadRequest())
                 .andReturn();
         RestException ex = fromResult(result, RestException.class);
@@ -78,8 +92,8 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     public void createUserWithNullLogin_ResponseBadRequest() throws Exception {
-        user.setLogin(null);
-        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user))
+        user1.setLogin(null);
+        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user1))
                 .andExpect(status().isBadRequest())
                 .andReturn();
         RestException ex = fromResult(result, RestException.class);
@@ -88,8 +102,8 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     public void createUserWithEmptyLogin_ResponseBadRequest() throws Exception {
-        user.setLogin("");
-        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user))
+        user1.setLogin("");
+        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user1))
                 .andExpect(status().isBadRequest())
                 .andReturn();
         RestException ex = fromResult(result, RestException.class);
@@ -98,8 +112,8 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     public void createUserWithSpacesInLogin_ResponseBadRequest() throws Exception {
-        user.setLogin("super login");
-        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user))
+        user1.setLogin("super login");
+        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user1))
                 .andExpect(status().isBadRequest())
                 .andReturn();
         RestException ex = fromResult(result, RestException.class);
@@ -108,8 +122,8 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     public void createUserWithBirthdayInTheFuture_ResponseBadRequest() throws Exception {
-        user.setBirthday(LocalDate.now().plusDays(1));
-        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user))
+        user1.setBirthday(LocalDate.now().plusDays(1));
+        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user1))
                 .andExpect(status().isBadRequest())
                 .andReturn();
         RestException ex = fromResult(result, RestException.class);
@@ -118,29 +132,29 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     public void createUser_CreatedUser() throws Exception {
-        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user))
+        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user1))
                 .andExpect(status().isOk())
                 .andReturn();
 
         User createdUser = fromResult(result, User.class);
-        user.setId(1L);
-        assertEquals(user, createdUser);
+        user1.setId(1L);
+        assertEquals(user1, createdUser);
     }
 
     @Test
     public void createUserWithEmptyName_CreatedUserWithNameAsLogin() throws Exception {
-        user.setName("");
-        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user))
+        user1.setName("");
+        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user1))
                 .andExpect(status().isOk())
                 .andReturn();
 
         User createdUser = fromResult(result, User.class);
-        assertEquals(user.getLogin(), createdUser.getName());
+        assertEquals(user1.getLogin(), createdUser.getName());
     }
 
     @Test
     public void updateUserWithEmptyName_UpdatedUserWithNameAsLogin() throws Exception {
-        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user))
+        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user1))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -157,17 +171,17 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     public void updateUserWithInvalidId_ResponseNotFound() throws Exception {
-        user.setId(1000L);
-        MvcResult result = mockMvc.perform(getPutRequestBuilder("/users", user))
+        user1.setId(1000L);
+        MvcResult result = mockMvc.perform(getPutRequestBuilder("/users", user1))
                 .andExpect(status().isNotFound())
                 .andReturn();
         RestException ex = fromResult(result, RestException.class);
-        assertEquals(String.format("Пользователь с id = %d не найден", user.getId()), ex.getMessage());
+        assertEquals(String.format("Пользователь с id = %d не найден", user1.getId()), ex.getMessage());
     }
 
     @Test
     public void updateUser_UpdatedUser() throws Exception {
-        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user))
+        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user1))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -187,12 +201,12 @@ class UserControllerTest extends AbstractControllerTest {
 
     @Test
     public void getAllUsers_ReturnerList() throws Exception {
-        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user))
+        MvcResult result = mockMvc.perform(getPostRequestBuilder("/users", user1))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        user.setName("Another Name");
-        result = mockMvc.perform(getPostRequestBuilder("/users", user))
+        user1.setName("Another Name");
+        result = mockMvc.perform(getPostRequestBuilder("/users", user1))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -200,7 +214,269 @@ class UserControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<User> users = fromResult(result,  new TypeReference<List<User>>() {});
+        List<User> users = fromResult(result, new TypeReference<List<User>>() {
+        });
         assertEquals(2, users.size());
+    }
+
+    @Test
+    public void getUserById_ResponseOk() throws Exception {
+        mockMvc.perform(getPostRequestBuilder("/users", user1))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        mockMvc.perform(getPostRequestBuilder("/users", user2))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        MvcResult result = mockMvc.perform(getGetRequestBuilder("/users/2"))
+                .andExpect(status().isOk())
+                .andReturn();
+        User requestedUser = fromResult(result, User.class);
+        assertEquals(2, requestedUser.getId());
+    }
+
+    @Test
+    public void getUserByInvalidId_ResponseNotFound() throws Exception {
+        mockMvc.perform(getGetRequestBuilder("/users/999"))
+                .andExpect(status().isNotFound())
+                .andReturn();
+    }
+
+    @Test
+    public void addFriend_ResponseOkAndAddedForBothUsers() throws Exception {
+        mockMvc.perform(getPostRequestBuilder("/users", user1))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        mockMvc.perform(getPostRequestBuilder("/users", user2))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        mockMvc.perform(getPutRequestBuilder("/users/1/friends/2", ""))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        MvcResult result1 = mockMvc.perform(getGetRequestBuilder("/users/1/friends"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        MvcResult result2 = mockMvc.perform(getGetRequestBuilder("/users/2/friends"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        List<User> friendList1 = fromResult(result1, new TypeReference<List<User>>() {
+        });
+        assertEquals(2, friendList1.get(0).getId());
+        List<User> friendList2 = fromResult(result2, new TypeReference<List<User>>() {
+        });
+        assertEquals(1, friendList2.get(0).getId());
+    }
+
+    @Test
+    public void addFriendWithInvalidFriendId_ResponseNotFound() throws Exception {
+        mockMvc.perform(getPostRequestBuilder("/users", user1))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        mockMvc.perform(getPutRequestBuilder("/users/1/friends/2", ""))
+                .andExpect(status().isNotFound())
+                .andReturn();
+    }
+
+    @Test
+    public void addFriendWithInvalidUserId_ResponseNotFound() throws Exception {
+        mockMvc.perform(getPostRequestBuilder("/users", user1))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        mockMvc.perform(getPutRequestBuilder("/users/999/friends/1", ""))
+                .andExpect(status().isNotFound())
+                .andReturn();
+    }
+
+    @Test
+    public void addFriendTwice_ResponseOk() throws Exception {
+        mockMvc.perform(getPostRequestBuilder("/users", user1))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        mockMvc.perform(getPostRequestBuilder("/users", user2))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        mockMvc.perform(getPutRequestBuilder("/users/1/friends/2", ""))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        mockMvc.perform(getPutRequestBuilder("/users/2/friends/1", ""))
+                .andExpect(status().isOk())
+                .andReturn();
+    }
+
+    @Test
+    public void removeFriend_ResponseOkRemovedFromBothUsers() throws Exception {
+        mockMvc.perform(getPostRequestBuilder("/users", user1))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        mockMvc.perform(getPostRequestBuilder("/users", user2))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        mockMvc.perform(getPutRequestBuilder("/users/1/friends/2", ""))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        mockMvc.perform(getDeleteRequestBuilder("/users/1/friends/2"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        MvcResult result1 = mockMvc.perform(getGetRequestBuilder("/users/1/friends"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        MvcResult result2 = mockMvc.perform(getGetRequestBuilder("/users/2/friends"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        List<User> friendList1 = fromResult(result1, new TypeReference<List<User>>() {
+        });
+        assertTrue(friendList1.isEmpty());
+        List<User> friendList2 = fromResult(result2, new TypeReference<List<User>>() {
+        });
+        assertTrue(friendList2.isEmpty());
+    }
+
+    @Test
+    public void removeFriendWithInvalidUserId_ResponseNotFound() throws Exception {
+        mockMvc.perform(getPostRequestBuilder("/users", user1))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        mockMvc.perform(getPostRequestBuilder("/users", user2))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        mockMvc.perform(getPutRequestBuilder("/users/1/friends/2", ""))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        mockMvc.perform(getDeleteRequestBuilder("/users/999/friends/2"))
+                .andExpect(status().isNotFound())
+                .andReturn();
+    }
+
+    @Test
+    public void removeFriendWithInvalidFriendId_ResponseNotFound() throws Exception {
+        mockMvc.perform(getPostRequestBuilder("/users", user1))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        mockMvc.perform(getPostRequestBuilder("/users", user2))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        mockMvc.perform(getPutRequestBuilder("/users/1/friends/2", ""))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        mockMvc.perform(getDeleteRequestBuilder("/users/1/friends/999"))
+                .andExpect(status().isNotFound())
+                .andReturn();
+    }
+
+    @Test
+    public void getFriends_ResponseStatusOkAndReceivedTwoFriends() throws Exception {
+        mockMvc.perform(getPostRequestBuilder("/users", user1))
+                .andExpect(status().isOk())
+                .andReturn();
+        mockMvc.perform(getPostRequestBuilder("/users", user2))
+                .andExpect(status().isOk())
+                .andReturn();
+        mockMvc.perform(getPostRequestBuilder("/users", user3))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        mockMvc.perform(getPutRequestBuilder("/users/1/friends/2", ""))
+                .andExpect(status().isOk())
+                .andReturn();
+        mockMvc.perform(getPutRequestBuilder("/users/1/friends/3", ""))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        MvcResult result = mockMvc.perform(getGetRequestBuilder("/users/1/friends"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        List<User> friendList = fromResult(result, new TypeReference<List<User>>() {
+        });
+        assertEquals(2, friendList.size());
+    }
+
+    @Test
+    public void getFriendsWithInvalidUserId_ResponseStatusNotFound() throws Exception {
+        mockMvc.perform(getPostRequestBuilder("/users", user1))
+                .andExpect(status().isOk())
+                .andReturn();
+        mockMvc.perform(getPostRequestBuilder("/users", user2))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        mockMvc.perform(getPutRequestBuilder("/users/1/friends/2", ""))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        mockMvc.perform(getGetRequestBuilder("/users/999/friends"))
+                .andExpect(status().isNotFound())
+                .andReturn();
+    }
+
+    @Test
+    public void getCommonFriends_ResponseStatusOkAndReceivedCommonFriends() throws Exception {
+        mockMvc.perform(getPostRequestBuilder("/users", user1))
+                .andExpect(status().isOk())
+                .andReturn();
+        mockMvc.perform(getPostRequestBuilder("/users", user2))
+                .andExpect(status().isOk())
+                .andReturn();
+        mockMvc.perform(getPostRequestBuilder("/users", user3))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        mockMvc.perform(getPutRequestBuilder("/users/1/friends/2", ""))
+                .andExpect(status().isOk())
+                .andReturn();
+        mockMvc.perform(getPutRequestBuilder("/users/3/friends/2", ""))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        MvcResult result = mockMvc.perform(getGetRequestBuilder("/users/1/friends/common/3"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        List<User> friendList = fromResult(result, new TypeReference<List<User>>() {
+        });
+        assertEquals(2, friendList.get(0).getId());
+    }
+
+    @Test
+    public void getCommonFriendsWithInvalidFirstUserId_ResponseStatusNotFound() throws Exception {
+        mockMvc.perform(getPostRequestBuilder("/users", user1))
+                .andExpect(status().isOk())
+                .andReturn();
+        mockMvc.perform(getGetRequestBuilder("/users/999/friends/common/1"))
+                .andExpect(status().isNotFound())
+                .andReturn();
+    }
+
+    @Test
+    public void getCommonFriendsWithInvalidSecondUserId_ResponseStatusNotFound() throws Exception {
+        mockMvc.perform(getPostRequestBuilder("/users", user1))
+                .andExpect(status().isOk())
+                .andReturn();
+        mockMvc.perform(getGetRequestBuilder("/users/1/friends/common/999"))
+                .andExpect(status().isNotFound())
+                .andReturn();
     }
 }

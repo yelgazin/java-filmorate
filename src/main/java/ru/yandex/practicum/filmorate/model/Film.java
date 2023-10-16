@@ -1,8 +1,10 @@
 package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.FieldDefaults;
 import ru.yandex.practicum.filmorate.validation.DateAfterOrEqual;
 
 import javax.validation.constraints.NotBlank;
@@ -14,15 +16,16 @@ import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Film extends BaseEntity<Long> {
     @NotBlank(message = "Название не может быть пустым")
-    private String name;
+    String name;
     @Size(max = 200, message = "Максимальная длина описания — 200 символов")
-    private String description;
+    String description;
     @DateAfterOrEqual(minDate = "1895-12-28", message = "Дата релиза не может быть раньше 28 декабря 1895 года")
-    private LocalDate releaseDate;
+    LocalDate releaseDate;
     @Positive(message = "Продолжительность фильма должна быть положительной")
-    private int duration;
+    int duration;
     @JsonIgnore
-    private Set<Long> likes = new HashSet<>();
+    Set<Long> likes = new HashSet<>();
 }

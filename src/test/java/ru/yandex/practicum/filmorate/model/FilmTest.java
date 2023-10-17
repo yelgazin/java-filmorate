@@ -15,7 +15,7 @@ class FilmTest extends ValidatorTest {
     @BeforeEach
     void beforeEach() {
         film = new Film();
-        film.setId(1);
+        film.setId(1L);
         film.setName("Name");
         film.setDescription("Description");
         film.setDuration(120);

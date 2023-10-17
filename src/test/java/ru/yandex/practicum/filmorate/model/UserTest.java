@@ -13,7 +13,7 @@ class UserTest extends ValidatorTest {
     @BeforeEach
     void beforeEach() {
         user = new User();
-        user.setId(1);
+        user.setId(1L);
         user.setEmail("valid@mail.ru");
         user.setLogin("loginName");
         user.setName("Some name");

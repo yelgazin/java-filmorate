@@ -46,6 +46,13 @@ public abstract class AbstractControllerTest {
                 .accept(MediaType.APPLICATION_JSON);
     }
 
+    protected RequestBuilder getDeleteRequestBuilder(String path) throws JsonProcessingException {
+        return MockMvcRequestBuilders
+                .delete(path)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON);
+    }
+
     protected <T> T fromResult(MvcResult result, Class<T> classType) throws Exception {
         String json = result.getResponse().getContentAsString(DEFAULT_ENCODING);
         return objectMapper.readValue(json, classType);

@@ -2,28 +2,28 @@ package ru.yandex.practicum.filmorate.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.yandex.practicum.filmorate.exception.RestException;
-import ru.yandex.practicum.filmorate.exception.RestExceptionHandler;
-import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.model.film.Film;
+import ru.yandex.practicum.filmorate.model.film.Genre;
+import ru.yandex.practicum.filmorate.model.film.Mpa;
+import ru.yandex.practicum.filmorate.model.user.User;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class FilmControllerTest extends AbstractControllerTest {
 
     private Film film;
@@ -31,22 +31,14 @@ class FilmControllerTest extends AbstractControllerTest {
 
     @BeforeEach
     public void setup() {
-        UserService userService = new UserService(new InMemoryUserStorage());
-        FilmService filmService = new FilmService(new InMemoryFilmStorage(), userService);
-
-        mockMvc = MockMvcBuilders
-                .standaloneSetup(
-                        new FilmController(filmService),
-                        new UserController(userService)
-                )
-                .setControllerAdvice(new RestExceptionHandler())
+        film = Film.builder()
+                .name("Some name")
+                .releaseDate(LocalDate.now())
+                .duration(120)
+                .description("Some description")
+                .mpa(Mpa.builder().id(1).build())
+                .genres(Set.of(Genre.builder().id(1).build()))
                 .build();
-
-        film = new Film();
-        film.setName("Some name");
-        film.setReleaseDate(LocalDate.now());
-        film.setDuration(120);
-        film.setDescription("Some description");
 
         user = new User();
         user.setEmail("valid@mail.ru");
@@ -296,7 +288,6 @@ class FilmControllerTest extends AbstractControllerTest {
         assertEquals(20, films.get(0).getId());
     }
 
-    @Disabled
     @Test
     public void getTopFilmsWithoutZeroCountLimit_ResponseBadRequest() throws Exception {
         createFilms(1);

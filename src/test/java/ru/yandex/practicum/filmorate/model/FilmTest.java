@@ -2,6 +2,8 @@ package ru.yandex.practicum.filmorate.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.model.film.Film;
+import ru.yandex.practicum.filmorate.model.film.Mpa;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -20,6 +22,7 @@ class FilmTest extends ValidatorTest {
         film.setDescription("Description");
         film.setDuration(120);
         film.setReleaseDate(LocalDate.now());
+        film.setMpa(Mpa.builder().id(1).build());
     }
 
     @Test

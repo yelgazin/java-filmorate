@@ -2,10 +2,7 @@ package ru.yandex.practicum.filmorate.storage;
 
 import ru.yandex.practicum.filmorate.model.BaseEntity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class BaseInMemoryStorage<E extends BaseEntity<K>, K> implements Storage<E, K> {
 
@@ -40,8 +37,8 @@ public abstract class BaseInMemoryStorage<E extends BaseEntity<K>, K> implements
         return entities.containsKey(entity.getId());
     }
 
-    public E findById(K id) {
-        return entities.get(id);
+    public Optional<E> findById(K id) {
+        return Optional.ofNullable(entities.get(id));
     }
 
     public List<E> findAll() {

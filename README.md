@@ -11,7 +11,7 @@ SELECT user_id,
        login,
        name,
        birthday
-FROM user
+FROM users
 WHERE user_id = ?;
 ```
 
@@ -22,27 +22,20 @@ SELECT user_id,
        login,
        name,
        birthday
-FROM user;
+FROM users;
 ```
 
 ### Получение друзей пользователя
 В таблице user_friend хранится связь пользователь -> друг. Колонка confirmed хранит булевое значение:
 1 - связь подтверждена,
 0 - связь не подтверждена.
-Считаем, что подтвержденная связь является двунаправленной.
-Для получения списка всех друзей пользователя выполняем 2 запроса или используем их объединение:
+Считаем, что подтвержденная связь является однонаправленной.
+Для получения списка всех друзей пользователя выполняем запрос:
 ``` roomsql
 SELECT friend_id AS user_id
 FROM user_friend
 WHERE confirmed = TRUE
 AND user_id = ?
-
-UNION
-
-SELECT user_id
-FROM user_friend
-WHERE confirmed = TRUE
-AND friend_id = ?;
 ```
 
 ### Получение идентификаторов популярных фильмов:

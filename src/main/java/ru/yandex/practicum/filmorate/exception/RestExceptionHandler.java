@@ -6,6 +6,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.yandex.practicum.filmorate.exception.film.FilmNotFoundException;
+import ru.yandex.practicum.filmorate.exception.film.GenreNotFoundException;
+import ru.yandex.practicum.filmorate.exception.film.MpaNotFoundException;
+import ru.yandex.practicum.filmorate.exception.user.UserAlreadyExistsException;
+import ru.yandex.practicum.filmorate.exception.user.UserNotFoundException;
 
 import javax.validation.ConstraintViolationException;
 
@@ -29,6 +34,14 @@ public class RestExceptionHandler {
         return new RestException(message, ex.getCause(), HttpStatus.BAD_REQUEST);
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = {UserAlreadyExistsException.class})
+    public RestException handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
+        String message = ex.getMessage();
+        log.info(message);
+        return new RestException(message, ex.getCause(), HttpStatus.BAD_REQUEST);
+    }
+
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(value = {IllegalArgumentException.class})
     public RestException handleIllegalArgumentException(IllegalArgumentException ex) {
@@ -38,7 +51,10 @@ public class RestExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(value = {UserNotFoundException.class, FilmNotFoundException.class})
+    @ExceptionHandler(value = {UserNotFoundException.class,
+            FilmNotFoundException.class,
+            MpaNotFoundException.class,
+            GenreNotFoundException.class})
     public RestException handleNotFoundException(Exception ex) {
         String message = ex.getMessage();
         log.info(message);

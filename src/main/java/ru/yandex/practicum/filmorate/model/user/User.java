@@ -1,10 +1,10 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
+import ru.yandex.practicum.filmorate.model.BaseEntity;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -14,6 +14,8 @@ import java.util.Set;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@SuperBuilder
+@NoArgsConstructor
 public class User extends BaseEntity<Long> {
     @NotBlank(message = "Электронная почта не может быть пустой и должна содержать символ @")
     @Email(message = "Электронная почта не может быть пустой и должна содержать символ @")
@@ -24,6 +26,7 @@ public class User extends BaseEntity<Long> {
     String name;
     @PastOrPresent(message = "Дата рождения не может быть в будущем")
     LocalDate birthday;
+    @Builder.Default
     @JsonIgnore
-    Set<Long> friends = new HashSet<>();
+    Set<Friendship> friendships = new HashSet<>();
 }

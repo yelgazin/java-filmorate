@@ -1,22 +1,23 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.model.film;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
+import ru.yandex.practicum.filmorate.model.BaseEntity;
 import ru.yandex.practicum.filmorate.validation.DateAfterOrEqual;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@SuperBuilder
+@NoArgsConstructor
 public class Film extends BaseEntity<Long> {
     @NotBlank(message = "Название не может быть пустым")
     String name;
@@ -26,6 +27,11 @@ public class Film extends BaseEntity<Long> {
     LocalDate releaseDate;
     @Positive(message = "Продолжительность фильма должна быть положительной")
     int duration;
+    @Builder.Default
+    Set<Genre> genres = new TreeSet<>(); // Тесты спринта требуют сортировку
+    @NotNull(message = "Рейтинг MPA не может быть пустым")
+    Mpa mpa;
+    @Builder.Default
     @JsonIgnore
     Set<Long> likes = new HashSet<>();
 }

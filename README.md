@@ -1,10 +1,12 @@
-# java-filmorate
+# Backend REST service Filmorate
 
-## Диаграмма отношений объектов (Entity Relationship Diagram - ERD)
+## Сервис подбора фильмом по оценкам пользователей
+
+### Диаграмма отношений объектов (Entity Relationship Diagram - ERD)
 
 ![](./doc/ERD.jpg)
 
-### Получение пользователя по id
+#### Получение пользователя по id
 ``` roomsql
 SELECT user_id,
        email,
@@ -15,7 +17,7 @@ FROM users
 WHERE user_id = ?;
 ```
 
-### Получение всех пользователей
+#### Получение всех пользователей
 ``` roomsql
 SELECT user_id,
        email,
@@ -25,7 +27,7 @@ SELECT user_id,
 FROM users;
 ```
 
-### Получение друзей пользователя
+#### Получение друзей пользователя
 В таблице user_friend хранится связь пользователь -> друг. Колонка confirmed хранит булевое значение:
 1 - связь подтверждена,
 0 - связь не подтверждена.
@@ -38,7 +40,7 @@ WHERE confirmed = TRUE
 AND user_id = ?
 ```
 
-### Получение идентификаторов популярных фильмов:
+#### Получение идентификаторов популярных фильмов
 ``` roomsql
 SELECT f.film_id
 FROM film f

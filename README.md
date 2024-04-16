@@ -52,7 +52,7 @@ GROUP BY f.film_id
 ORDER BY COUNT(l.*);
 ```
 
-## Технологический стэк
+## Технологический стек
 ![java](https://img.shields.io/badge/java-%23ed8b00.svg?logo=openjdk&logoColor=white&style=flat)
 ![spring](https://img.shields.io/badge/spring-%236db33f.svg?logo=spring&logoColor=white&style=flat)
 ![postgres](https://img.shields.io/badge/postgres-%23336791.svg?logo=postgresql&logoColor=white&style=flat)
